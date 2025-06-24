@@ -1,95 +1,71 @@
 // DOM Elements
-const themeToggle = document.getElementById('theme-toggle');
-const body = document.body;
-const header = document.querySelector('.header');
-const yearSpan = document.getElementById('year');
-const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-const navList = document.querySelector('.nav-list');
-const tabBtns = document.querySelectorAll('.tab-btn');
+const themeToggle = document.querySelector('.theme-toggle');
+const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+const primaryNav = document.querySelector('.primary-nav');
+const tabButtons = document.querySelectorAll('.tab-btn');
 const tabContents = document.querySelectorAll('.tab-content');
-const journeyTabs = document.querySelectorAll('.journey-tab');
-const journeyContents = document.querySelectorAll('.journey-content');
-const skillProgressBars = document.querySelectorAll('.skill-progress');
-const skillProgressCircles = document.querySelectorAll('.progress-fill');
 const form = document.querySelector('form');
+const currentYear = document.getElementById('current-year');
+const skillMeters = document.querySelectorAll('.meter-bar');
+const scrollLinks = document.querySelectorAll('a[href^="#"]');
 
 // Theme Toggle
 const toggleTheme = () => {
-    const isDark = body.getAttribute('data-theme') === 'dark';
-    body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-    themeToggle.innerHTML = isDark 
-        ? '<i class="fas fa-moon" aria-hidden="true"></i>' 
-        : '<i class="fas fa-sun" aria-hidden="true"></i>';
-    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
 };
 
 // Load saved theme
 const loadTheme = () => {
     const savedTheme = localStorage.getItem('theme') || 'dark';
-    body.setAttribute('data-theme', savedTheme);
-    themeToggle.innerHTML = savedTheme === 'dark' 
-        ? '<i class="fas fa-sun" aria-hidden="true"></i>' 
-        : '<i class="fas fa-moon" aria-hidden="true"></i>';
+    document.documentElement.setAttribute('data-theme', savedTheme);
 };
 
-// Mobile Menu Toggle
-const toggleMobileMenu = () => {
-    navList.classList.toggle('active');
-    mobileMenuBtn.innerHTML = navList.classList.contains('active') 
-        ? '<i class="fas fa-times"></i>' 
-        : '<i class="fas fa-bars"></i>';
+// Mobile Navigation Toggle
+const toggleMobileNav = () => {
+    const isExpanded = mobileNavToggle.getAttribute('aria-expanded') === 'true';
+    mobileNavToggle.setAttribute('aria-expanded', !isExpanded);
+    primaryNav.classList.toggle('active');
+    document.body.style.overflow = isExpanded ? 'auto' : 'hidden';
 };
 
 // Tab Switching
 const switchTab = (e) => {
-    // Remove active class from all buttons and contents
-    tabBtns.forEach(btn => btn.classList.remove('active'));
-    tabContents.forEach(content => content.classList.remove('active'));
+    // Prevent default if it's a button click
+    if (e.target.tagName === 'BUTTON') {
+        e.preventDefault();
+    }
     
-    // Add active class to clicked button
-    e.target.classList.add('active');
+    const targetTab = e.target.dataset.tab;
     
-    // Show corresponding content
-    const tabId = e.target.getAttribute('data-tab');
-    document.getElementById(tabId).classList.add('active');
-};
-
-// Journey Tab Switching
-const switchJourneyTab = (e) => {
-    // Remove active class from all buttons and contents
-    journeyTabs.forEach(btn => btn.classList.remove('active'));
-    journeyContents.forEach(content => content.classList.remove('active'));
-    
-    // Add active class to clicked button
-    e.target.classList.add('active');
-    
-    // Show corresponding content
-    const tabId = e.target.getAttribute('data-tab');
-    document.getElementById(tabId).classList.add('active');
-};
-
-// Animate skill bars on scroll
-const animateSkills = () => {
-    skillProgressBars.forEach(bar => {
-        const percent = bar.parentElement.getAttribute('data-percent');
-        bar.style.width = `${percent}%`;
+    // Update active tab button
+    tabButtons.forEach(button => {
+        button.classList.remove('active');
+        if (button.dataset.tab === targetTab) {
+            button.classList.add('active');
+        }
     });
     
-    skillProgressCircles.forEach(circle => {
-        const percent = circle.parentElement.parentElement.getAttribute('data-percent');
-        circle.style.strokeDashoffset = `calc(220 - (220 * ${percent}) / 100)`;
+    // Show corresponding content
+    tabContents.forEach(content => {
+        content.classList.remove('active');
+        if (content.id === targetTab) {
+            content.classList.add('active');
+        }
     });
 };
 
-// Form submission
+// Form Submission
 const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const submitBtn = form.querySelector('button[type="submit"]');
-    const originalContent = submitBtn.innerHTML;
+    const submitButton = form.querySelector('button[type="submit"]');
+    const originalText = submitButton.innerHTML;
     
     // Show loading state
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-    submitBtn.disabled = true;
+    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    submitButton.disabled = true;
     
     try {
         const formData = new FormData(form);
@@ -103,137 +79,130 @@ const handleFormSubmit = async (e) => {
         
         if (response.ok) {
             // Show success state
-            submitBtn.innerHTML = '<i class="fas fa-check"></i> Sent!';
+            submitButton.innerHTML = '<i class="fas fa-check"></i> Sent!';
             form.reset();
+            
+            // Reset button after delay
+            setTimeout(() => {
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+            }, 3000);
         } else {
             throw new Error('Form submission failed');
         }
     } catch (error) {
-        submitBtn.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error';
+        submitButton.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error';
         setTimeout(() => {
-            submitBtn.innerHTML = originalContent;
-            submitBtn.disabled = false;
+            submitButton.innerHTML = originalText;
+            submitButton.disabled = false;
         }, 2000);
     }
 };
 
-// Header scroll effect
-const handleScroll = () => {
-    // Header shadow effect
-    header.classList.toggle('scrolled', window.scrollY > 50);
-    
-    // Update active nav link based on scroll position
-    const sections = document.querySelectorAll('section');
-    let current = '';
-    
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (pageYOffset >= sectionTop - 300) {
-            current = section.getAttribute('id');
-        }
+// Animate skill meters when in view
+const animateSkillMeters = () => {
+    skillMeters.forEach(meter => {
+        const level = meter.style.getPropertyValue('--level');
+        meter.style.width = level;
     });
-    
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current}`) {
-            link.classList.add('active');
-        }
-    });
-};
-
-// Initialize skill animations when they come into view
-const initSkillAnimations = () => {
-    const skillsSection = document.getElementById('skills');
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateSkills();
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1 });
-    
-    observer.observe(skillsSection);
-};
-
-// Set current year
-const setCurrentYear = () => {
-    yearSpan.textContent = new Date().getFullYear();
 };
 
 // Smooth scrolling for anchor links
-const initSmoothScrolling = () => {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                window.scrollTo({
-                    top: target.offsetTop - 80,
-                    behavior: 'smooth'
-                });
+const smoothScroll = (e) => {
+    e.preventDefault();
+    const targetId = e.currentTarget.getAttribute('href');
+    const targetElement = document.querySelector(targetId);
+    
+    if (targetElement) {
+        const headerHeight = document.querySelector('.main-header').offsetHeight;
+        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+        
+        window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+        });
+        
+        // Close mobile menu if open
+        if (primaryNav.classList.contains('active')) {
+            toggleMobileNav();
+        }
+    }
+};
+
+// Set current year in footer
+const setCurrentYear = () => {
+    const year = new Date().getFullYear();
+    currentYear.textContent = year;
+};
+
+// Initialize Intersection Observer for animations
+const initIntersectionObserver = () => {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+    
+    const observerCallback = (entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
                 
-                // Close mobile menu if open
-                if (navList.classList.contains('active')) {
-                    toggleMobileMenu();
+                // Special case for skill meters
+                if (entry.target.classList.contains('skills-section')) {
+                    animateSkillMeters();
                 }
             }
         });
+    };
+    
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    
+    // Observe all sections
+    document.querySelectorAll('section').forEach(section => {
+        observer.observe(section);
     });
 };
 
-// Initialize animations when elements come into view
-const initScrollAnimations = () => {
-    const animateElements = document.querySelectorAll('.animate, .animate__animated');
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate__fadeInUp');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1 });
-    
-    animateElements.forEach(el => {
-        observer.observe(el);
-    });
-};
-
-// Initialize
-const init = () => {
-    loadTheme();
-    setCurrentYear();
-    initSmoothScrolling();
-    initScrollAnimations();
-    initSkillAnimations();
-    
-    // Event listeners
+// Initialize event listeners
+const initEventListeners = () => {
+    // Theme toggle
     themeToggle.addEventListener('click', toggleTheme);
-    mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-    window.addEventListener('scroll', handleScroll);
     
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', switchTab);
+    // Mobile navigation toggle
+    mobileNavToggle.addEventListener('click', toggleMobileNav);
+    
+    // Tab buttons
+    tabButtons.forEach(button => {
+        button.addEventListener('click', switchTab);
     });
     
-    journeyTabs.forEach(tab => {
-        tab.addEventListener('click', switchJourneyTab);
-    });
-    
+    // Form submission
     if (form) {
         form.addEventListener('submit', handleFormSubmit);
     }
     
-    // Close mobile menu when clicking on a link
+    // Smooth scrolling
+    scrollLinks.forEach(link => {
+        link.addEventListener('click', smoothScroll);
+    });
+    
+    // Close mobile menu when clicking on a nav link
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
-            if (navList.classList.contains('active')) {
-                toggleMobileMenu();
+            if (primaryNav.classList.contains('active')) {
+                toggleMobileNav();
             }
         });
     });
 };
 
+// Initialize the app
+const init = () => {
+    loadTheme();
+    setCurrentYear();
+    initEventListeners();
+    initIntersectionObserver();
+};
+
+// Start the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', init);
