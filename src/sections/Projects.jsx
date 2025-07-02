@@ -1,11 +1,12 @@
 import { motion } from 'framer-motion'
 import { useEffect } from 'react'
 
-import otakulinkImage from '../assets/otakulink.png'
-import otomotoImg from '../assets/otomoto.png'
-import codixsImg from '../assets/codixs.png'
-import slibraryImg from '../assets/slibrary.png'
-import solohubImg from '../assets/solohub.png'
+import otakulinkImage from '../assets/projects/otakulink.png'
+import otomotoImg from '../assets/projects/otomoto.png'
+import codixsImg from '../assets/projects/codixs.png'
+import slibraryImg from '../assets/projects/slibrary.png'
+import solohubImg from '../assets/projects/solohub.png'
+import spamdetectorImg from '../assets/projects/spam-detector.png'
 
 const Projects = ({ setActiveSection }) => {
   useEffect(() => {
@@ -32,7 +33,7 @@ const Projects = ({ setActiveSection }) => {
     title: "OtakuLink",
     description: "A cross-platform manga community application built with Flutter and Firebase. Features include manga bookmarking, social interactions, and real-time chat. Manga data is sourced from the Jikan API with custom caching solutions.",
     tech: ["Flutter", "Firebase", "Jikan API", "Dart", "Provider"],
-    image: './assets/otakulink.png',
+    image: otakulinkImage,
     demo: "https://otakulink-1d1d8.web.app",
     code: "https://github.com/bhax1/otakulink"
   }
@@ -61,6 +62,12 @@ const Projects = ({ setActiveSection }) => {
       description: "Freelancer productivity suite with task tracking and client management. Features secure login authentication and real-time updates.",
       tech: ["Python", "Flask", "GoLang", "JavaScript", "Firebase"],
       image: solohubImg
+    },
+    {
+      title: "Spam Detector",
+      description: "A spam detection web app built with Streamlit and Python. Trained in Google Colab using a Naive Bayes model and text vectorization.",
+      tech: ["Python", "Streamlit", "Google Colab", "Naive Bayes"],
+      image: spamdetectorImg
     }
   ]
 

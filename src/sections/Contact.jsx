@@ -39,7 +39,7 @@ const Contact = ({ setActiveSection }) => {
           >
             <h3 className="contact-heading">Let's build something amazing together!</h3>
             <p className="contact-text">
-              I'm currently seeking internship opportunities for Summer 2024. 
+              I'm currently seeking internship opportunities for Summer 2025. 
               Whether you have a project idea or just want to connect, I'd love to hear from you.
             </p>
             
