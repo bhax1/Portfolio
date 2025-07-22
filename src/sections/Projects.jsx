@@ -35,8 +35,8 @@ const Projects = ({ setActiveSection }) => {
       description: "A cross-platform manga community application built with Flutter and Firebase. Features include manga bookmarking, social interactions, and real-time chat. Manga data is sourced from the Jikan API with custom caching solutions.",
       tech: ["Flutter", "Firebase", "Jikan API", "Dart", "Provider"],
       image: otakulinkImage,
-      demo: "https://otakulink-1d1d8.web.app",
-      code: "https://github.com/bhax1/otakulink",
+      demo: "#",
+      code: "#",
     },
     {
       title: "Otomoto",
