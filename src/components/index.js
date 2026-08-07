@@ -1,3 +1,6 @@
+export { default as Icon } from './Icon'
 export { default as Navbar } from './Navbar'
+export { default as Reveal } from './Reveal'
+export { default as ScrollProgress } from './ScrollProgress'
+export { default as Section } from './Section'
 export { default as ThemeToggle } from './ThemeToggle'
-export { default as ScrollIndicator } from './ScrollIndicator'

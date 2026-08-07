@@ -1,0 +1,6 @@
+export { profile, socials, navItems } from './profile'
+export { projects, moreProjectsUrl } from './projects'
+export { skillGroups } from './skills'
+export { education, experience } from './experience'
+export { achievements } from './achievements'
+export { projectImage, resumeUrl, profilePhoto } from './assets'

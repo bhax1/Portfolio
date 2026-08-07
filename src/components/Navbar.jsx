@@ -1,74 +1,99 @@
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
 
-import resume from '../assets/files/Resume.pdf'
+import Icon from './Icon'
+import ThemeToggle from './ThemeToggle'
+import { profile, resumeUrl } from '../data'
 
-const Navbar = ({ activeSection }) => {
+const Navbar = ({ items, activeSection, theme, toggleTheme }) => {
   const [scrolled, setScrolled] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    const onScroll = () => setScrolled(window.scrollY > 8)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const navItems = [
-    { id: 'home', label: 'Home' },
-    { id: 'about', label: 'About' },
-    { id: 'skills', label: 'Skills' },
-    { id: 'projects', label: 'Projects' },
-    { id: 'journey', label: 'Journey' },
-    { id: 'contact', label: 'Contact' }
-  ]
+  // Close the mobile menu on Escape and stop the page behind it from scrolling.
+  useEffect(() => {
+    if (!menuOpen) return
+
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') setMenuOpen(false)
+    }
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKeyDown)
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [menuOpen])
 
   return (
-    <motion.nav 
-      className={`navbar ${scrolled ? 'scrolled' : ''}`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="container">
-        <a href="#home" className="logo">
-          <span className="text-gradient">BO</span>
+    <header className={`header ${scrolled ? 'header--scrolled' : ''}`.trim()}>
+      <div className="container header__inner">
+        <a href="#home" className="brand" onClick={() => setMenuOpen(false)}>
+          <span className="brand__mark">{profile.initials}</span>
+          <span className="brand__name">{profile.name}</span>
         </a>
-        
-        <div className={`nav-links ${mobileMenuOpen ? 'open' : ''}`}>
-          {navItems.map((item) => (
+
+        <nav className="nav" aria-label="Sections">
+          {items.map((item) => (
             <a
               key={item.id}
               href={`#${item.id}`}
-              className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
-              onClick={() => setMobileMenuOpen(false)}
+              className={`nav__link ${activeSection === item.id ? 'is-active' : ''}`.trim()}
+              aria-current={activeSection === item.id ? 'true' : undefined}
             >
               {item.label}
-              <span className="nav-indicator"></span>
             </a>
           ))}
-          
-          <a 
-            href={resume}
-            className="btn btn-outline resume-btn"
-            download
-          >
+        </nav>
+
+        <div className="header__actions">
+          <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
+          <a href={resumeUrl} className="button button--ghost header__resume" download>
+            <Icon name="download" size={16} />
             Resume
           </a>
+          <button
+            type="button"
+            className="icon-button header__menu-button"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          >
+            <Icon name={menuOpen ? 'close' : 'menu'} size={20} />
+          </button>
         </div>
-        
-        <button 
-          className={`mobile-menu-btn ${mobileMenuOpen ? 'open' : ''}`}
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle navigation"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
       </div>
-    </motion.nav>
+
+      <div
+        id="mobile-menu"
+        className={`mobile-menu ${menuOpen ? 'is-open' : ''}`.trim()}
+        hidden={!menuOpen}
+      >
+        <nav className="mobile-menu__nav" aria-label="Sections">
+          {items.map((item) => (
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              className={`mobile-menu__link ${activeSection === item.id ? 'is-active' : ''}`.trim()}
+              onClick={() => setMenuOpen(false)}
+            >
+              {item.label}
+            </a>
+          ))}
+          <a href={resumeUrl} className="mobile-menu__link" download onClick={() => setMenuOpen(false)}>
+            Resume
+          </a>
+        </nav>
+      </div>
+    </header>
   )
 }
 

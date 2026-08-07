@@ -1,39 +1,74 @@
-import { useState, useEffect } from 'react'
-import { Hero, About, Skills, Projects, Journey, Contact, Footer } from './sections'
-import { Navbar, ThemeToggle, ScrollIndicator} from './components'
-import BackgroundParticles from './components/BackgroundParticles'
+import { useMemo } from 'react'
+
+import { Navbar, ScrollProgress } from './components'
+import { Hero, About, Projects, Skills, Experience, Achievements, Contact, Footer } from './sections'
+import { useActiveSection } from './hooks/useActiveSection'
+import { useTheme } from './hooks/useTheme'
+import { navItems, projects, skillGroups, education, experience, achievements } from './data'
 import './App.css'
 
+/** The order sections are rendered in below — used to number their eyebrows. */
+const SECTION_ORDER = ['about', 'projects', 'skills', 'experience', 'achievements', 'contact']
+
 function App() {
-  const [theme, setTheme] = useState('dark')
-  const [activeSection, setActiveSection] = useState('home')
+  const { theme, toggleTheme } = useTheme()
 
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
-  }, [theme])
+  // A section only exists if its data file has something in it, so emptying an
+  // array in src/data hides both the section and its navigation link.
+  const present = useMemo(
+    () => ({
+      about: true,
+      projects: projects.length > 0,
+      skills: skillGroups.length > 0,
+      experience: education.length > 0 || experience.length > 0,
+      achievements: achievements.length > 0,
+      contact: true,
+    }),
+    []
+  )
 
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark')
-  }
+  const visibleNavItems = useMemo(
+    () => navItems.filter((item) => present[item.id]),
+    [present]
+  )
+
+  const activeSection = useActiveSection(visibleNavItems.map((item) => item.id))
+
+  // Sequential numbers for the section eyebrows, counted over the sections that
+  // are actually rendered so hiding one never leaves a gap in the sequence.
+  const order = useMemo(() => {
+    let n = 0
+    return Object.fromEntries(
+      SECTION_ORDER.map((id) => [id, present[id] ? ++n : null])
+    )
+  }, [present])
 
   return (
-    <div className="app-container">
-      <BackgroundParticles theme={theme} />
-      <Navbar activeSection={activeSection} />
-      <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
-      <ScrollIndicator />
-      
-      <main>
-        <Hero setActiveSection={setActiveSection} />
-        <About setActiveSection={setActiveSection} />
-        <Skills setActiveSection={setActiveSection} />
-        <Projects setActiveSection={setActiveSection} />
-        <Journey setActiveSection={setActiveSection} />
-        <Contact setActiveSection={setActiveSection} />
+    <>
+      <a href="#main" className="skip-link">
+        Skip to content
+      </a>
+
+      <ScrollProgress />
+      <Navbar
+        items={visibleNavItems}
+        activeSection={activeSection}
+        theme={theme}
+        toggleTheme={toggleTheme}
+      />
+
+      <main id="main">
+        <Hero />
+        {present.about && <About number={order.about} />}
+        {present.projects && <Projects number={order.projects} />}
+        {present.skills && <Skills number={order.skills} />}
+        {present.experience && <Experience number={order.experience} />}
+        {present.achievements && <Achievements number={order.achievements} />}
+        {present.contact && <Contact number={order.contact} />}
       </main>
-      
+
       <Footer />
-    </div>
+    </>
   )
 }
 
