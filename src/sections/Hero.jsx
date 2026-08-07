@@ -1,6 +1,6 @@
 import Icon from '../components/Icon'
 import Reveal from '../components/Reveal'
-import { profile, socials, resumeUrl } from '../data'
+import { profile, socials } from '../data'
 
 const Hero = () => (
   <section id="home" className="hero">
@@ -29,9 +29,8 @@ const Hero = () => (
           View projects
           <Icon name="arrowRight" size={16} />
         </a>
-        <a href={resumeUrl} className="button button--ghost" download>
-          <Icon name="download" size={16} />
-          Download resume
+        <a href={`${import.meta.env.BASE_URL}resume.html`} className="button button--ghost">
+          View resume
         </a>
       </Reveal>
 

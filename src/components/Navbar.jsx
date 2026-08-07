@@ -1,12 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import Icon from './Icon'
 import ThemeToggle from './ThemeToggle'
 import { profile, resumeUrl } from '../data'
 
-const Navbar = ({ items, activeSection, theme, toggleTheme }) => {
+const resumePage = `${import.meta.env.BASE_URL}resume.html`
+
+const Navbar = ({ items, activeSection, theme, toggleTheme, onOpenPalette }) => {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+
+  // Show the shortcut in the notation the visitor's keyboard actually uses.
+  const shortcut = useMemo(() => {
+    if (typeof navigator === 'undefined') return 'Ctrl K'
+    return /mac|iphone|ipad/i.test(navigator.platform || navigator.userAgent) ? '⌘ K' : 'Ctrl K'
+  }, [])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -54,9 +62,20 @@ const Navbar = ({ items, activeSection, theme, toggleTheme }) => {
         </nav>
 
         <div className="header__actions">
+          <button
+            type="button"
+            className="palette-trigger"
+            onClick={onOpenPalette}
+            aria-label="Open command palette"
+          >
+            <Icon name="search" size={16} />
+            <span className="palette-trigger__text">Search</span>
+            <kbd className="palette-trigger__kbd">{shortcut}</kbd>
+          </button>
+
           <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
-          <a href={resumeUrl} className="button button--ghost header__resume" download>
-            <Icon name="download" size={16} />
+
+          <a href={resumePage} className="button button--ghost header__resume">
             Resume
           </a>
           <button
@@ -88,8 +107,11 @@ const Navbar = ({ items, activeSection, theme, toggleTheme }) => {
               {item.label}
             </a>
           ))}
-          <a href={resumeUrl} className="mobile-menu__link" download onClick={() => setMenuOpen(false)}>
+          <a href={resumePage} className="mobile-menu__link" onClick={() => setMenuOpen(false)}>
             Resume
+          </a>
+          <a href={resumeUrl} className="mobile-menu__link" download onClick={() => setMenuOpen(false)}>
+            Download resume PDF
           </a>
         </nav>
       </div>

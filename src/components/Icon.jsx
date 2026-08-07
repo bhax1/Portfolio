@@ -68,6 +68,12 @@ const paths = {
       <path d="m8.5 13.5-1.2 7 4.7-2.6 4.7 2.6-1.2-7" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
     </>
   ),
+  search: (
+    <>
+      <circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" strokeWidth="1.7" />
+      <path d="m16 16 4.5 4.5" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    </>
+  ),
   send: (
     <path d="M20.5 3.5 3.8 10.2c-.7.3-.66 1.3.05 1.53l6.2 2 2 6.2c.23.72 1.23.76 1.53.06L20.5 3.5Zm0 0-10.4 10.2" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
   ),
@@ -76,7 +82,7 @@ const paths = {
 /** Icons drawn with strokes already declare fill="none"; the rest use fill. */
 const strokeOnly = new Set([
   'mail', 'location', 'external', 'download', 'arrowRight',
-  'sun', 'moon', 'menu', 'close', 'award', 'send',
+  'sun', 'moon', 'menu', 'close', 'award', 'send', 'search',
 ])
 
 const Icon = ({ name, size = 20, className = '' }) => {

@@ -38,14 +38,35 @@ npm run deploy   # build and publish to GitHub Pages
 ## Structure
 
 ```
+index.html         portfolio entry
+resume.html        resume entry (both are Vite build inputs)
 src/
 ├── data/          all editable content  ← start here
 ├── sections/      one component per page section
-├── components/    Navbar, Section shell, Icon set, Reveal, ScrollProgress
+├── pages/         Resume
+├── components/    Navbar, CommandPalette, Section shell, Icon set, Reveal
 ├── hooks/         useTheme, useActiveSection
-├── index.css      design tokens, reset, primitives (buttons, tags)
-└── App.css        layout and section styles
+├── lib/           fuzzy matching, slugify
+├── index.css      design tokens, reset, primitives (buttons, tags, kbd)
+├── App.css        layout and section styles
+└── resume.css     resume screen + print styles
 ```
+
+## Features
+
+**Command palette.** `⌘K` / `Ctrl+K` anywhere, or `/` when not typing in a
+field, or the Search button in the header. Fuzzy search across sections,
+projects and actions — jump to a section, scroll straight to a project card,
+copy the email address, switch theme, open a social link. It builds its index
+from `src/data/`, so a project added there is searchable with no extra wiring.
+Full keyboard control (`↑` `↓` `Home` `End` `↵` `Esc`) and a `listbox`/`option`
+ARIA structure.
+
+**Resume page.** `/resume.html`, generated from the same `src/data/` files as
+the site, so the two can never drift. "Print / Save as PDF" produces a clean A4
+document — the print stylesheet forces the light palette regardless of the
+visitor's theme, hides the page chrome, and keeps entries from splitting across
+pages. `profile.phone` and `profile.website` appear only here, never on the site.
 
 ## Notes
 

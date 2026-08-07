@@ -2,6 +2,7 @@ import Icon from '../components/Icon'
 import Reveal from '../components/Reveal'
 import Section from '../components/Section'
 import { projects, moreProjectsUrl, projectImage } from '../data'
+import { slugify } from '../lib/slugify'
 
 const ProjectCard = ({ project, index }) => {
   const image = projectImage(project.image)
@@ -12,6 +13,7 @@ const ProjectCard = ({ project, index }) => {
   return (
     <Reveal
       as="article"
+      id={`project-${slugify(project.title)}`}
       delay={Math.min(index, 4) * 0.06}
       className={`project ${project.featured ? 'project--featured' : ''}`.trim()}
     >

@@ -1,3 +1,4 @@
+export { default as CommandPalette } from './CommandPalette'
 export { default as Icon } from './Icon'
 export { default as Navbar } from './Navbar'
 export { default as Reveal } from './Reveal'

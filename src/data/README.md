@@ -48,6 +48,17 @@ layout reflows on its own — there is no fixed number of groups.
 **Hide a section.** Empty its array (`projects`, `skillGroups`, `education`,
 `experience`, `achievements`). The section and its nav link both disappear.
 
+## What updates itself
+
+You do not have to register content anywhere twice:
+
+- **The command palette** (`⌘K`) indexes sections, projects, socials and actions
+  straight from these files. Add a project and it becomes searchable.
+- **The resume page** (`/resume.html`) is generated from these same files, so it
+  can never fall out of date with the site.
+- **`profile.phone` and `profile.website`** appear on the resume only. Leave
+  them as empty strings to keep them off it.
+
 ## Running it
 
 ```bash

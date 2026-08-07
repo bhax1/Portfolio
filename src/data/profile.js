@@ -19,6 +19,11 @@ export const profile = {
   location: 'Davao City, Philippines',
   email: 'b.ongoy.534716@umindanao.edu.ph',
 
+  // Optional. Both appear only on the printed resume, never on the site.
+  // Leave them as empty strings to keep them off the resume entirely.
+  phone: '',
+  website: 'bhax1.github.io/Portfolio',
+
   // Set `available` to false to hide the status pill in the hero.
   status: {
     available: true,
