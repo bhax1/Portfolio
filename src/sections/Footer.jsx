@@ -1,19 +1,13 @@
-import { useEffect } from 'react'
-
 import resume from '../assets/files/Resume.pdf'
 
 const Footer = () => {
-  useEffect(() => {
-    document.getElementById('current-year').textContent = new Date().getFullYear()
-  }, [])
-
   return (
     <footer className="main-footer">
       <div className="container">
         <div className="footer-content">
           <div className="footer-brand">
             <a href="#" className="footer-logo">
-              <span className="text-gradient">BO</span>
+              bo<span className="logo-dot">.</span>
             </a>
             <p className="footer-text">Digital creator & problem solver</p>
           </div>
@@ -50,7 +44,7 @@ const Footer = () => {
         </div>
         
         <div className="footer-bottom">
-          <p className="copyright">&copy; <span id="current-year"></span> Bob Ongoy. All rights reserved.</p>
+          <p className="copyright">&copy; {new Date().getFullYear()} Bob Ongoy. All rights reserved.</p>
           <p className="made-with">Made with <i className="fas fa-heart"></i> in the Philippines</p>
         </div>
       </div>
