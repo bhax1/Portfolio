@@ -1,31 +1,16 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
-import resume from '../assets/files/Resume.pdf'
-
-const navItems = [
-  { id: 'home', label: 'Home' },
-  { id: 'about', label: 'About' },
-  { id: 'skills', label: 'Skills' },
-  { id: 'projects', label: 'Projects' },
-  { id: 'journey', label: 'Journey' },
-  { id: 'contact', label: 'Contact' }
-]
+import { navItems } from '../data'
 
 const Navbar = ({ activeSection }) => {
   const [scrolled, setScrolled] = useState(false)
-  const [hidden, setHidden] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const lastY = useRef(0)
 
-  // Hide on scroll down, reveal on scroll up.
+  // Always visible; just gets a blurred background once you scroll.
   useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY
-      setScrolled(y > 40)
-      setHidden(y > lastY.current && y > 160)
-      lastY.current = y
-    }
+    const onScroll = () => setScrolled(window.scrollY > 40)
+    onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
@@ -39,14 +24,10 @@ const Navbar = ({ activeSection }) => {
     <motion.nav
       className={`navbar ${scrolled ? 'scrolled' : ''}`}
       initial={{ y: -80, opacity: 0 }}
-      animate={{ y: hidden && !mobileMenuOpen ? -100 : 0, opacity: 1 }}
+      animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
     >
       <div className="container nav-inner">
-        <a href="#home" className="logo" aria-label="Back to top">
-          bo<span className="logo-dot">.</span>
-        </a>
-
         <div className={`nav-links ${mobileMenuOpen ? 'open' : ''}`}>
           {navItems.map((item) => (
             <a
@@ -65,10 +46,6 @@ const Navbar = ({ activeSection }) => {
               <span className="nav-label">{item.label}</span>
             </a>
           ))}
-
-          <a href={resume} className="btn btn-outline resume-btn" download>
-            Resume
-          </a>
         </div>
 
         <button

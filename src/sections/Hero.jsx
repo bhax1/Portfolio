@@ -2,21 +2,7 @@ import { motion } from 'framer-motion'
 
 import { SplitText, Magnetic, Marquee } from '../components'
 import useActiveSection from '../hooks/useActiveSection'
-
-const techStack = [
-  { name: 'Python', icon: 'devicon-python-plain' },
-  { name: 'JavaScript', icon: 'devicon-javascript-plain' },
-  { name: 'React', icon: 'devicon-react-original' },
-  { name: 'Flutter', icon: 'devicon-flutter-plain' },
-  { name: 'Java', icon: 'devicon-java-plain' },
-  { name: 'Firebase', icon: 'devicon-firebase-plain' },
-  { name: 'Supabase', icon: 'devicon-supabase-plain' },
-  { name: 'PHP', icon: 'devicon-php-plain' },
-  { name: 'MySQL', icon: 'devicon-mysql-plain' },
-  { name: 'Flask', icon: 'devicon-flask-original' },
-  { name: 'Git', icon: 'devicon-git-plain' },
-  { name: 'Docker', icon: 'devicon-docker-plain' }
-]
+import { profile, hero } from '../data'
 
 const ease = [0.16, 1, 0.3, 1]
 const fadeUp = (delay) => ({
@@ -33,11 +19,11 @@ const Hero = ({ setActiveSection }) => {
       <div className="container hero-inner">
         <div className="hero-content">
           <motion.p className="hero-pretitle" {...fadeUp(0.1)}>
-            <span className="status-dot" /> Hello, I'm
+            <span className="status-dot" /> {hero.pretitle}
           </motion.p>
 
           <h1 className="hero-title">
-            <SplitText text="Bob" inView={false} delay={0.25} />
+            <SplitText text={profile.firstName} inView={false} delay={0.25} />
             <motion.span
               className="hero-period"
               initial={{ scale: 0, opacity: 0 }}
@@ -49,23 +35,22 @@ const Hero = ({ setActiveSection }) => {
           </h1>
 
           <h2 className="hero-subtitle">
-            <SplitText text="Full-Stack Developer & CS Student" inView={false} delay={0.55} stagger={0.05} />
+            <SplitText text={hero.subtitle} inView={false} delay={0.55} stagger={0.05} />
           </h2>
 
           <motion.p className="hero-description" {...fadeUp(1)}>
-            Building digital experiences with clean code and thoughtful design.
-            Passionate about creating solutions that bridge technology and human needs.
+            {hero.description}
           </motion.p>
 
           <motion.div className="hero-actions" {...fadeUp(1.15)}>
             <Magnetic>
               <a href="#projects" className="btn btn-primary">
-                <span>View Projects</span>
+                <span>{hero.primaryCta}</span>
               </a>
             </Magnetic>
             <Magnetic>
               <a href="#contact" className="btn btn-outline">
-                <span>Let's Connect</span>
+                <span>{hero.secondaryCta}</span>
               </a>
             </Magnetic>
           </motion.div>
@@ -84,7 +69,7 @@ const Hero = ({ setActiveSection }) => {
             </defs>
             <text>
               <textPath href="#badge-circle" startOffset="0">
-                Open to internships • Full-Stack • Mobile • Web •
+                {hero.badgeText}
               </textPath>
             </text>
           </svg>
@@ -95,7 +80,7 @@ const Hero = ({ setActiveSection }) => {
       </div>
 
       <motion.div className="hero-marquee" {...fadeUp(1.4)}>
-        <Marquee items={techStack} />
+        <Marquee items={hero.techStack} />
       </motion.div>
     </section>
   )

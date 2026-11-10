@@ -1,5 +1,6 @@
 import { Reveal, SectionHeader, Magnetic } from '../components'
 import useActiveSection from '../hooks/useActiveSection'
+import { profile, socials, contact } from '../data'
 
 const Contact = ({ setActiveSection }) => {
   useActiveSection('contact', setActiveSection)
@@ -11,11 +12,8 @@ const Contact = ({ setActiveSection }) => {
         
         <div className="contact-container">
           <Reveal className="contact-info">
-            <h3 className="contact-heading">Let's build something amazing together!</h3>
-            <p className="contact-text">
-              I'm currently seeking internship opportunities for Summer 2025. 
-              Whether you have a project idea or just want to connect, I'd love to hear from you.
-            </p>
+            <h3 className="contact-heading">{contact.heading}</h3>
+            <p className="contact-text">{contact.text}</p>
             
             <div className="contact-methods">
               <div className="contact-method">
@@ -24,7 +22,7 @@ const Contact = ({ setActiveSection }) => {
                 </div>
                 <div className="method-details">
                   <h4>Email Me</h4>
-                  <a href="mailto:b.ongoy.534716@umindanao.edu.ph">b.ongoy.534716@umindanao.edu.ph</a>
+                  <a href={`mailto:${profile.email}`}>{profile.email}</a>
                 </div>
               </div>
               
@@ -34,30 +32,23 @@ const Contact = ({ setActiveSection }) => {
                 </div>
                 <div className="method-details">
                   <h4>Location</h4>
-                  <p>Davao City, Philippines</p>
+                  <p>{profile.location}</p>
                 </div>
               </div>
             </div>
             
             <div className="social-links">
-              <a href="https://github.com/bhax1" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                <i className="fab fa-github"></i>
-              </a>
-              <a href="https://www.linkedin.com/in/bobandreongoy/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                <i className="fab fa-linkedin-in"></i>
-              </a>
-              <a href="https://www.facebook.com/bobandre.joseongoy" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                <i className="fab fa-facebook-f"></i>
-              </a>
-              <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                <i className="fab fa-twitter"></i>
-              </a>
+              {socials.map((social) => (
+                <a key={social.key} href={social.url} target="_blank" rel="noopener noreferrer" aria-label={social.label}>
+                  <i className={social.icon}></i>
+                </a>
+              ))}
             </div>
           </Reveal>
           
           <Reveal className="contact-form" delay={0.15}>
-            <form action="https://formsubmit.co/b.ongoy.534716@umindanao.edu.ph" method="POST">
-              <input type="hidden" name="_subject" value="New message from portfolio!" />
+            <form action={`https://formsubmit.co/${contact.formRecipient}`} method="POST">
+              <input type="hidden" name="_subject" value={contact.formSubject} />
               <input type="hidden" name="_captcha" value="false" />
               <input type="hidden" name="_template" value="table" />
               <input type="hidden" name="_next" value="#" />

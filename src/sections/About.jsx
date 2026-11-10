@@ -1,11 +1,15 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 
-import profileImage from '../assets/profile-pic.png'
 import { Reveal, SectionHeader } from '../components'
 import useActiveSection from '../hooks/useActiveSection'
+import { profile, about } from '../data'
 
-const languages = ['Python', 'Java', 'C++', 'JavaScript', 'PHP', 'Dart', 'HTML', 'CSS']
+const { languages } = about
+
+// Renders **bold** segments of a string as <strong>.
+const renderRich = (text) =>
+  text.split(/\*\*(.+?)\*\*/g).map((part, i) => (i % 2 ? <strong key={i}>{part}</strong> : part))
 
 const About = ({ setActiveSection }) => {
   useActiveSection('about', setActiveSection)
@@ -23,24 +27,15 @@ const About = ({ setActiveSection }) => {
         <div className="about-grid">
           <div className="about-content">
             <div className="about-text">
-              <Reveal>
-                <p>
-                  I'm a Computer Science student with a passion for building digital solutions that make an impact.
-                  My journey in tech began with simple Java applications and has evolved into full-stack development
-                  across multiple platforms.
-                </p>
-              </Reveal>
-              <Reveal delay={0.1}>
-                <p>
-                  Currently, I'm expanding my expertise into <strong>machine learning</strong> and <strong>cloud architecture</strong>,
-                  while continuing to refine my skills in mobile and web development. I believe in continuous learning
-                  and pushing the boundaries of what's possible with code.
-                </p>
-              </Reveal>
+              {about.paragraphs.map((paragraph, i) => (
+                <Reveal key={i} delay={i * 0.1}>
+                  <p>{renderRich(paragraph)}</p>
+                </Reveal>
+              ))}
             </div>
 
             <Reveal delay={0.2} className="tech-stack">
-              <h3>Languages I Use</h3>
+              <h3>{about.languagesTitle}</h3>
               <div className="tech-tags">
                 {languages.map((language, i) => (
                   <motion.span
@@ -68,8 +63,8 @@ const About = ({ setActiveSection }) => {
             transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
           >
             <motion.img
-              src={profileImage}
-              alt="Bob Ongoy"
+              src={profile.photo}
+              alt={profile.name}
               className="about-photo"
               loading="lazy"
               style={{ y: imgY, scale: 1.18 }}

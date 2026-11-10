@@ -1,4 +1,6 @@
-import resume from '../assets/files/Resume.pdf'
+import { profile, getSocial, blog, footer } from '../data'
+
+const github = getSocial('github')
 
 const Footer = () => {
   return (
@@ -6,10 +8,7 @@ const Footer = () => {
       <div className="container">
         <div className="footer-content">
           <div className="footer-brand">
-            <a href="#" className="footer-logo">
-              bo<span className="logo-dot">.</span>
-            </a>
-            <p className="footer-text">Digital creator & problem solver</p>
+            <p className="footer-text">{profile.tagline}</p>
           </div>
           
           <div className="footer-links">
@@ -26,16 +25,15 @@ const Footer = () => {
           <div className="footer-links">
             <h4>Resources</h4>
             <ul>
-              <li><a href={resume} download>Resume</a></li>
-              <li><a href="https://github.com/bhax1" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-              <li><a href="https://dev.to/bhax1" target="_blank" rel="noopener noreferrer">Blog</a></li>
+              <li><a href={github.url} target="_blank" rel="noopener noreferrer">{github.label}</a></li>
+              <li><a href={blog.url} target="_blank" rel="noopener noreferrer">{blog.label}</a></li>
             </ul>
           </div>
           
           <div className="footer-newsletter">
-            <h4>Stay Updated</h4>
+            <h4>{footer.newsletterTitle}</h4>
             <form className="newsletter-form">
-              <input type="email" placeholder="Your email address" required />
+              <input type="email" placeholder={footer.newsletterPlaceholder} required />
               <button type="submit" className="btn btn-primary">
                 <i className="fas fa-paper-plane"></i>
               </button>
@@ -44,8 +42,8 @@ const Footer = () => {
         </div>
         
         <div className="footer-bottom">
-          <p className="copyright">&copy; {new Date().getFullYear()} Bob Ongoy. All rights reserved.</p>
-          <p className="made-with">Made with <i className="fas fa-heart"></i> in the Philippines</p>
+          <p className="copyright">&copy; {new Date().getFullYear()} {profile.name}. All rights reserved.</p>
+          <p className="made-with">Made with <i className="fas fa-heart"></i> in {profile.country}</p>
         </div>
       </div>
     </footer>

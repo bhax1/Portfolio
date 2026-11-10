@@ -19,7 +19,8 @@ main { position: relative; z-index: 1; }
   -webkit-backdrop-filter: blur(14px);
   border-bottom-color: var(--border);
 }
-.nav-inner { display: flex; align-items: center; justify-content: space-between; }
+.nav-inner { display: flex; align-items: center; justify-content: center; }
+.mobile-menu-btn { margin-left: auto; }
 
 .logo, .footer-logo {
   font: 700 1.6rem var(--font-display);
@@ -45,7 +46,6 @@ main { position: relative; z-index: 1; }
   background: var(--surface-2);
   border: 1px solid var(--border);
 }
-.resume-btn { margin-left: 0.75rem; padding: 0.5rem 1.2rem; font-size: 0.85rem; }
 
 .mobile-menu-btn {
   display: none;
@@ -492,7 +492,6 @@ main { position: relative; z-index: 1; }
   }
   .nav-links.open { opacity: 1; pointer-events: auto; transform: none; }
   .nav-link { font: 600 2rem var(--font-display); letter-spacing: -0.03em; padding: 0.4rem 1.2rem; }
-  .resume-btn { margin: 1.5rem 0 0; }
 
   .hero-inner { grid-template-columns: 1fr; padding-top: 7rem; padding-bottom: 3rem; }
   .hero-visual { display: none; }
