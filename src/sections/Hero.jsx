@@ -1,165 +1,102 @@
 import { motion } from 'framer-motion'
-import { useEffect } from 'react'
+
+import { SplitText, Magnetic, Marquee } from '../components'
+import useActiveSection from '../hooks/useActiveSection'
+
+const techStack = [
+  { name: 'Python', icon: 'devicon-python-plain' },
+  { name: 'JavaScript', icon: 'devicon-javascript-plain' },
+  { name: 'React', icon: 'devicon-react-original' },
+  { name: 'Flutter', icon: 'devicon-flutter-plain' },
+  { name: 'Java', icon: 'devicon-java-plain' },
+  { name: 'Firebase', icon: 'devicon-firebase-plain' },
+  { name: 'Supabase', icon: 'devicon-supabase-plain' },
+  { name: 'PHP', icon: 'devicon-php-plain' },
+  { name: 'MySQL', icon: 'devicon-mysql-plain' },
+  { name: 'Flask', icon: 'devicon-flask-original' },
+  { name: 'Git', icon: 'devicon-git-plain' },
+  { name: 'Docker', icon: 'devicon-docker-plain' }
+]
+
+const ease = [0.16, 1, 0.3, 1]
+const fadeUp = (delay) => ({
+  initial: { opacity: 0, y: 24 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.9, delay, ease }
+})
 
 const Hero = ({ setActiveSection }) => {
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection('home')
-          }
-        })
-      },
-      { threshold: 0.5 }
-    )
-
-    const hero = document.querySelector('#home')
-    if (hero) observer.observe(hero)
-
-    return () => {
-      if (hero) observer.unobserve(hero)
-    }
-  }, [setActiveSection])
-
-  // Expanded tech icons array
-  const deviconClasses = [
-    'devicon-python-plain colored',
-    'devicon-javascript-plain colored',
-    'devicon-typescript-plain colored',
-    'devicon-react-original colored',
-    'devicon-vuejs-plain colored',
-    'devicon-java-plain colored',
-    'devicon-cplusplus-plain colored',
-    'devicon-html5-plain colored',
-    'devicon-css3-plain colored',
-    'devicon-nodejs-plain colored',
-    'devicon-express-original colored',
-    'devicon-mysql-plain colored',
-    'devicon-git-plain colored',
-    'devicon-github-original colored',
-    'devicon-docker-plain colored',
-    'devicon-android-plain colored'
-  ]
-
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3
-      }
-    }
-  }
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut"
-      }
-    }
-  }
+  useActiveSection('home', setActiveSection)
 
   return (
     <section id="home" className="hero-section">
-      <div className="container">
-        <motion.div
-          className="hero-content"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.p className="hero-pretitle" variants={itemVariants}>
-            Hello, I'm
+      <div className="container hero-inner">
+        <div className="hero-content">
+          <motion.p className="hero-pretitle" {...fadeUp(0.1)}>
+            <span className="status-dot" /> Hello, I'm
           </motion.p>
 
-          <motion.h1 className="hero-title" variants={itemVariants}>
-            <span className="text-gradient">Bob</span>
-          </motion.h1>
+          <h1 className="hero-title">
+            <SplitText text="Bob" inView={false} delay={0.25} />
+            <motion.span
+              className="hero-period"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.9, type: 'spring', stiffness: 400, damping: 12 }}
+            >
+              .
+            </motion.span>
+          </h1>
 
-          <motion.h2 className="hero-subtitle" variants={itemVariants}>
-            Full-Stack Developer & CS Student
-          </motion.h2>
+          <h2 className="hero-subtitle">
+            <SplitText text="Full-Stack Developer & CS Student" inView={false} delay={0.55} stagger={0.05} />
+          </h2>
 
-          <motion.p className="hero-description" variants={itemVariants}>
+          <motion.p className="hero-description" {...fadeUp(1)}>
             Building digital experiences with clean code and thoughtful design.
             Passionate about creating solutions that bridge technology and human needs.
           </motion.p>
 
-          <motion.div className="hero-actions" variants={itemVariants}>
-            <a href="#projects" className="btn btn-primary">
-              View Projects
-            </a>
-            <a href="#contact" className="btn btn-outline">
-              Let's Connect
-            </a>
+          <motion.div className="hero-actions" {...fadeUp(1.15)}>
+            <Magnetic>
+              <a href="#projects" className="btn btn-primary">
+                <span>View Projects</span>
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a href="#contact" className="btn btn-outline">
+                <span>Let's Connect</span>
+              </a>
+            </Magnetic>
           </motion.div>
-        </motion.div>
+        </div>
 
-        <div className="hero-visual">
-          <div className="tech-sphere-container">
-            {/* Core sphere */}
-            <motion.div 
-              className="tech-sphere-core"
-              animate={{
-                rotateY: 360,
-                transition: {
-                  duration: 30,
-                  repeat: Infinity,
-                  ease: "linear"
-                }
-              }}
-            >
-              <div className="tech-icon-main">
-                <i className="devicon-code-plain colored"></i>
-              </div>
-            </motion.div>
-
-            {/* Three orbital rings */}
-            {[0, 1, 2].map((orbitIndex) => (
-              <motion.div
-                key={`orbit-${orbitIndex}`}
-                className="tech-orbit"
-                animate={{
-                  rotateY: orbitIndex % 2 ? 360 : -360,
-                  transition: {
-                    duration: 20 + orbitIndex * 5,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }
-                }}
-              >
-                {deviconClasses
-                  .filter((_, i) => i % 3 === orbitIndex)
-                  .map((iconClass, i) => (
-                    <div 
-                      key={`icon-${orbitIndex}-${i}`}
-                      className="tech-orbital-icon"
-                      style={{
-                        transform: `rotateY(${i * (360/6)}deg) translateZ(${120 + orbitIndex * 60}px)`
-                      }}
-                    >
-                      <i className={iconClass}></i>
-                    </div>
-                  ))}
-              </motion.div>
-            ))}
+        <motion.div
+          className="hero-visual"
+          initial={{ opacity: 0, scale: 0.85 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.2, delay: 0.6, ease }}
+          aria-hidden="true"
+        >
+          <svg className="badge-ring" viewBox="0 0 200 200">
+            <defs>
+              <path id="badge-circle" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" />
+            </defs>
+            <text>
+              <textPath href="#badge-circle" startOffset="0">
+                Open to internships • Full-Stack • Mobile • Web •
+              </textPath>
+            </text>
+          </svg>
+          <div className="badge-core">
+            <span className="badge-arrow">↓</span>
           </div>
-        </div>
+        </motion.div>
       </div>
 
-      <div className="scroll-cue">
-        <span>Scroll Down</span>
-        <div className="mouse-indicator">
-          <div className="mouse-wheel"></div>
-        </div>
-      </div>
+      <motion.div className="hero-marquee" {...fadeUp(1.4)}>
+        <Marquee items={techStack} />
+      </motion.div>
     </section>
   )
 }

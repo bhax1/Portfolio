@@ -1,42 +1,16 @@
-import { motion } from 'framer-motion'
-import { useEffect } from 'react'
+import { Reveal, SectionHeader, Magnetic } from '../components'
+import useActiveSection from '../hooks/useActiveSection'
 
 const Contact = ({ setActiveSection }) => {
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection('contact')
-          }
-        })
-      },
-      { threshold: 0.5 }
-    )
-    
-    const contact = document.querySelector('#contact')
-    if (contact) observer.observe(contact)
-    
-    return () => {
-      if (contact) observer.unobserve(contact)
-    }
-  }, [setActiveSection])
+  useActiveSection('contact', setActiveSection)
 
   return (
     <section id="contact" className="contact-section">
       <div className="container">
-        <div className="section-header">
-          <h2 className="section-title">Get In Touch</h2>
-        </div>
+        <SectionHeader index="05" label="Contact" title="Get In Touch" />
         
         <div className="contact-container">
-          <motion.div 
-            className="contact-info"
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-          >
+          <Reveal className="contact-info">
             <h3 className="contact-heading">Let's build something amazing together!</h3>
             <p className="contact-text">
               I'm currently seeking internship opportunities for Summer 2025. 
@@ -79,15 +53,9 @@ const Contact = ({ setActiveSection }) => {
                 <i className="fab fa-twitter"></i>
               </a>
             </div>
-          </motion.div>
+          </Reveal>
           
-          <motion.div 
-            className="contact-form"
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-          >
+          <Reveal className="contact-form" delay={0.15}>
             <form action="https://formsubmit.co/b.ongoy.534716@umindanao.edu.ph" method="POST">
               <input type="hidden" name="_subject" value="New message from portfolio!" />
               <input type="hidden" name="_captcha" value="false" />
@@ -114,11 +82,13 @@ const Contact = ({ setActiveSection }) => {
                 <textarea id="message" name="message" rows="5" required></textarea>
               </div>
               
-              <button type="submit" className="btn btn-primary btn-block">
-                Send Message <i className="fas fa-paper-plane"></i>
-              </button>
+              <Magnetic strength={0.15}>
+                <button type="submit" className="btn btn-primary btn-block">
+                  <span>Send Message <i className="fas fa-paper-plane"></i></span>
+                </button>
+              </Magnetic>
             </form>
-          </motion.div>
+          </Reveal>
         </div>
       </div>
     </section>

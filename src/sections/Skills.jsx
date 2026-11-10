@@ -1,28 +1,13 @@
-import { motion } from 'framer-motion'
-import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useState } from 'react'
+
+import { SectionHeader } from '../components'
+import useActiveSection from '../hooks/useActiveSection'
 
 const Skills = ({ setActiveSection }) => {
   const [activeTab, setActiveTab] = useState('languages')
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection('skills')
-          }
-        })
-      },
-      { threshold: 0.5 }
-    )
-
-    const skills = document.querySelector('#skills')
-    if (skills) observer.observe(skills)
-
-    return () => {
-      if (skills) observer.unobserve(skills)
-    }
-  }, [setActiveSection])
+  useActiveSection('skills', setActiveSection)
 
   const tabs = {
     languages: [
@@ -73,37 +58,48 @@ const Skills = ({ setActiveSection }) => {
   return (
     <section id="skills" className="skills-section">
       <div className="container">
-        <div className="section-header">
-          <h2 className="section-title">Skills & Expertise</h2>
-        </div>
+        <SectionHeader index="02" label="Skills" title="Skills & Expertise" />
 
         <div className="skills-tabs">
-          <div className="tab-buttons">
+          <div className="tab-buttons" role="tablist">
             {Object.keys(tabs).map((tab) => (
               <button
                 key={tab}
+                role="tab"
+                aria-selected={activeTab === tab}
                 className={`tab-btn ${activeTab === tab ? 'active' : ''}`}
                 onClick={() => setActiveTab(tab)}
               >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                {activeTab === tab && (
+                  <motion.span
+                    layoutId="tab-underline"
+                    className="tab-underline"
+                    transition={{ type: 'spring', stiffness: 400, damping: 34 }}
+                  />
+                )}
+                <span>{tab.charAt(0).toUpperCase() + tab.slice(1)}</span>
               </button>
             ))}
           </div>
 
-          <div className="tab-contents">
+          <AnimatePresence mode="wait">
             <motion.div
               className="skills-grid"
               key={activeTab}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
+              initial="hidden"
+              animate="visible"
+              exit={{ opacity: 0, transition: { duration: 0.15 } }}
+              variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.04 } } }}
             >
               {tabs[activeTab].map((skill) => (
                 <motion.div
                   className="skill-card"
                   key={skill.name}
-                  whileHover={{ y: -5 }}
-                  transition={{ duration: 0.2 }}
+                  variants={{
+                    hidden: { opacity: 0, y: 16, scale: 0.96 },
+                    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] } }
+                  }}
+                  whileHover={{ y: -4 }}
                 >
                   <div className="skill-icon">
                     {skill.icon.startsWith('devicon-') ? (
@@ -116,7 +112,7 @@ const Skills = ({ setActiveSection }) => {
                 </motion.div>
               ))}
             </motion.div>
-          </div>
+          </AnimatePresence>
         </div>
       </div>
     </section>
